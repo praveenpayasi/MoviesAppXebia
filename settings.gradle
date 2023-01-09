@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MoviesAppXebia"
 include ':app'
+include ':app:mylibrary'
+include ':circularprogressbar'
