@@ -17,3 +17,17 @@ Repository separates the concern and provide clear way of handling data. With li
 
 
 
+
+## Libraries used
+| Library name | Purpose |
+| ----------- | ----------- |
+| [Compose](https://developer.android.com/jetpack/compose?gclid=Cj0KCQiAtvSdBhD0ARIsAPf8oNkDAMncWNBZYk-wQFw7LKWQKCmC6PLH64quv2kZuYcc8oONIZ54BS0aAvBmEALw_wcB&gclsrc=aw.ds) | It simplifies and accelerates UI development on Android.|
+| [Retrofit](https://square.github.io/retrofit/) | A type-safe HTTP client for Android  |
+| [JUnit](https://junit.org/junit4/) | Testing framework which runs test cases on JVM  |
+| [Mockk](https://mockk.io/) | Mocking library for Kotlin  |
+| [Mock Webserver](https://github.com/square/okhttp/tree/master/mockwebserver) | Mocking network calls while running UI tests |
+| [Flow](https://kotlinlang.org/docs/flow.html) | Manage data stream asynchronously |
+| [Picasso](https://square.github.io/picasso/) | A powerful image downloading and caching library for Android  |
+
+
+
