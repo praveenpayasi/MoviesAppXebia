@@ -8,7 +8,10 @@ import com.xebia.moviesappxebia.data.model.NowPlayingResponse
 import com.xebia.moviesappxebia.data.model.PopularMoviesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
-
+/**
+ *  this class is used for specifying api calls
+ *
+ */
 interface MoviesService {
 
     @GET("$API_VERSION/$API_PATH/popular?api_key=$ACCESS_TOKEN&language=en-US&page=1")

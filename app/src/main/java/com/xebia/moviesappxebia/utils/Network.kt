@@ -2,7 +2,10 @@ package com.xebia.moviesappxebia.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-
+/**
+ *  this class is used for checking internet is connected or not
+ *
+ */
 object Network {
     private const val NETWORK_STATUS_NOT_CONNECTED = 0
     private const val NETWORK_STATUS_WIFI = 1

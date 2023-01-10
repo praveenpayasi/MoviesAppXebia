@@ -2,6 +2,10 @@ package com.xebia.moviesappxebia.data.movies
 
 import kotlinx.coroutines.flow.flow
 
+/**
+ *  this class is used for collecting data from api call
+ *
+ */
 class MoviesRepository(private val service: MoviesService) {
 
     companion object{

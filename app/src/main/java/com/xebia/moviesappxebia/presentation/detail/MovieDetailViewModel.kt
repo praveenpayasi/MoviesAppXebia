@@ -2,14 +2,18 @@ package com.xebia.moviesappxebia.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xebia.moviesappxebia.domain.MostPopularUseCase
+import com.xebia.moviesappxebia.domain.MoviesUseCase
 import com.xebia.moviesappxebia.domain.model.MovieDetails
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ *  MovieDetailViewModel is for getting manipulated data from use-case layer
+ *  and collecting into stateFlow
+ */
 class MovieDetailViewModel(
-    private val mostPopularUseCase: MostPopularUseCase
+    private val moviesUseCase: MoviesUseCase
 ) : ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _movieDetailState = MutableStateFlow(MovieDetails())
@@ -20,7 +24,7 @@ class MovieDetailViewModel(
 
     fun getMovieDetailsById(movieId: Int) {
         viewModelScope.launch {
-            mostPopularUseCase.fetchMoviesDetails(movieId).collect {
+            moviesUseCase.fetchMoviesDetails(movieId).collect {
                 _movieDetailState.value = it
             }
         }

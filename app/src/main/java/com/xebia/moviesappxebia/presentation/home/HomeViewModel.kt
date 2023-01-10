@@ -2,15 +2,19 @@ package com.xebia.moviesappxebia.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xebia.moviesappxebia.domain.MostPopularUseCase
+import com.xebia.moviesappxebia.domain.MoviesUseCase
 import com.xebia.moviesappxebia.domain.model.NowPlaying
 import com.xebia.moviesappxebia.domain.model.PopularMovie
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+/**
+ *  HomeViewModel is for getting manipulated data from use-case layer
+ *  and collecting into stateFlow
+ */
 
-class HomeViewModel (
-    private val mostPopularUseCase: MostPopularUseCase
+class HomeViewModel(
+    private val moviesUseCase: MoviesUseCase
 ) :
     ViewModel() {
     // Backing property to avoid state updates from other classes
@@ -28,7 +32,7 @@ class HomeViewModel (
 
     fun getPopularMovies() {
         viewModelScope.launch {
-            mostPopularUseCase.fetchMostPopularMovies().collect {
+            moviesUseCase.fetchMostPopularMovies().collect {
                 _popularListState.value = it
             }
         }
@@ -36,7 +40,7 @@ class HomeViewModel (
 
     fun getNowPlayingMovies() {
         viewModelScope.launch {
-            mostPopularUseCase.fetchNowPlayingMovies().collect {
+            moviesUseCase.fetchNowPlayingMovies().collect {
                 _nowPlayingListState.value = it
             }
         }

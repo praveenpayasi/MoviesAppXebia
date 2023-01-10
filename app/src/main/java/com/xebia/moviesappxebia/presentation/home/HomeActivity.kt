@@ -2,34 +2,49 @@ package com.xebia.moviesappxebia.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
+import com.xebia.moviesappxebia.R
 import com.xebia.moviesappxebia.data.moviesService
 import com.xebia.moviesappxebia.data.movies.MoviesRepository
-import com.xebia.moviesappxebia.domain.MostPopularUseCase
+import com.xebia.moviesappxebia.domain.MoviesUseCase
 import com.xebia.moviesappxebia.domain.model.NowPlaying
 import com.xebia.moviesappxebia.domain.model.PopularMovie
 import com.xebia.moviesappxebia.presentation.detail.MoviesDetailActivity
-import com.xebia.moviesappxebia.utils.CircularProgressBar
 import com.xebia.moviesappxebia.utils.Network
 
+/**
+ *  HomeActivity is home screen for displaying now playing and
+ *  most popular movies list
+ */
 class HomeActivity : ComponentActivity() {
 
     private lateinit var homeViewModel: HomeViewModel
@@ -38,7 +53,7 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         homeViewModel = HomeViewModel(
-            MostPopularUseCase(
+            MoviesUseCase(
                 MoviesRepository(
                     moviesService
                 )
@@ -60,7 +75,9 @@ class HomeActivity : ComponentActivity() {
                         .padding(top = 10.dp, bottom = 16.dp),
                     color = Color.Black,
                     textAlign = TextAlign.Center,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = kanitFontFamily
                 )
 
                 Container(homeViewModel)
@@ -80,9 +97,11 @@ class HomeActivity : ComponentActivity() {
             Row {
                 NowPlayingList(viewModel)
             }
-            Divider(color = Color.White, modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp))
+            Divider(
+                color = Color.White, modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp)
+            )
         }
         Column(
             modifier = Modifier
@@ -110,16 +129,16 @@ class HomeActivity : ComponentActivity() {
                     .wrapContentWidth()
                     .padding(top = 16.dp, bottom = 16.dp, start = 16.dp),
                 fontWeight = FontWeight.Normal,
-                //fontFamily = kanitFontFamily
+                fontFamily = kanitFontFamily
             )
         }
     }
 
     @Composable
     fun NowPlayingList(viewModel: HomeViewModel) {
-        if (Network.checkConnectivity(this)){
+        if (Network.checkConnectivity(this)) {
             viewModel.getNowPlayingMovies()
-        }else{
+        } else {
             Toast.makeText(this, "No Internet connection", Toast.LENGTH_SHORT).show()
         }
         val playing by viewModel.nowPlayingListState.collectAsState()
@@ -170,7 +189,7 @@ class HomeActivity : ComponentActivity() {
                     .wrapContentWidth()
                     .padding(top = 16.dp, bottom = 8.dp, start = 16.dp),
                 fontWeight = FontWeight.Normal,
-                //fontFamily = kanitFontFamily
+                fontFamily = kanitFontFamily
             )
         }
     }
@@ -178,9 +197,9 @@ class HomeActivity : ComponentActivity() {
 
     @Composable
     fun MostPopularList(viewModel: HomeViewModel) {
-        if (Network.checkConnectivity(this)){
+        if (Network.checkConnectivity(this)) {
             viewModel.getPopularMovies()
-        }else{
+        } else {
             Toast.makeText(this, "No Internet connection", Toast.LENGTH_SHORT).show()
         }
         val popular by viewModel.popularListState.collectAsState()
@@ -196,7 +215,6 @@ class HomeActivity : ComponentActivity() {
     fun MostPopularListItem(popular: PopularMovie) {
         Card(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
             Row(
-
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Black)
@@ -204,18 +222,21 @@ class HomeActivity : ComponentActivity() {
                         val intent = Intent(this, MoviesDetailActivity::class.java)
                         intent.putExtra("KEY_MOVIE_ID", popular.idMovie)
                         startActivity(intent)
-                    }
+                    }, verticalAlignment = Alignment.CenterVertically
+
             ) {
-                GlideImage(
-                    imageModel = popular.strImageUrl,
-                    modifier = Modifier
-                        .height(120.dp)
-                        .width(110.dp)
-                        .padding(top = 6.dp, bottom = 6.dp),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Movie image",
-                )
-                Column() {
+                Column(modifier = Modifier.weight(2f)) {
+                    GlideImage(
+                        imageModel = popular.strImageUrl,
+                        modifier = Modifier
+                            .height(120.dp)
+                            .width(110.dp)
+                            .padding(top = 6.dp, bottom = 6.dp, start = 16.dp),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "Movie image",
+                    )
+                }
+                Column(modifier = Modifier.weight(7f)) {
                     Text(
                         text = popular.strTitle,
                         fontSize = 18.sp,
@@ -224,8 +245,8 @@ class HomeActivity : ComponentActivity() {
                             .wrapContentWidth()
                             .padding(top = 16.dp, bottom = 16.dp, start = 16.dp),
                         fontWeight = FontWeight.Bold,
-                        maxLines = 1, overflow = TextOverflow.Ellipsis
-                        //fontFamily = kanitFontFamily
+                        maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        fontFamily = kanitFontFamily
                     )
 
                     Text(
@@ -236,44 +257,147 @@ class HomeActivity : ComponentActivity() {
                             .wrapContentWidth()
                             .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                         fontWeight = FontWeight.Normal,
-                        //fontFamily = kanitFontFamily,
+                        fontFamily = kanitFontFamily,
 
-                    )
+                        )
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically){
-//                    Text(
-//                        text = "70%",
-//                        fontSize = 16.sp,
-//                        color = Color.White,
-//                        fontWeight = FontWeight.Normal,
-//                        //fontFamily = kanitFontFamily,
-//
-//                    )
-
-                    CircularProgressBar(
-                        modifier = Modifier.size(60.dp),
-                        progress = 30f,
-                        progressMax = 100f,
-                        progressBarColor = Color.Red,
-                        progressBarWidth = 2.dp,
-                        backgroundProgressBarColor = Color.White,
-                        backgroundProgressBarWidth = 2.dp,
-                        roundBorder = true,
-                        startAngle = 90f
-                    )
+                Column(
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(end = 16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AverageVotingProgressBar(popular.strVote)
                 }
 
             }
         }
     }
+
+    /**
+     * custom progressBar for showing average voting of particular movie
+     */
+    @Composable
+    fun AverageVotingProgressBar(
+        vote: Double,
+        size: Dp = 50.dp,
+        foregroundIndicatorColor: Color = Color(0xFFE91E63),
+        shadowColor: Color = Color.LightGray,
+        indicatorThickness: Dp = 2.dp,
+        dataUsage: Double = vote,
+        animationDuration: Int = 1000,
+        dataTextStyle: TextStyle = TextStyle(
+            fontFamily = FontFamily(Font(R.font.kanitregular, FontWeight.Normal)),
+            fontSize = 14.sp,
+            color = Color.White
+        ),
+        remainingTextStyle: TextStyle = TextStyle(
+            fontFamily = FontFamily(Font(R.font.kanitregular, FontWeight.Normal)),
+            fontSize = 5.sp
+        )
+    ) {
+        Log.d("praveen    ", "" + vote)
+        // It remembers the data usage value
+        var dataUsageRemember by remember {
+            mutableStateOf(-1f)
+        }
+
+        // This is to animate the foreground indicator
+        val dataUsageAnimate = animateFloatAsState(
+            targetValue = dataUsageRemember,
+            animationSpec = tween(
+                durationMillis = animationDuration
+            )
+        )
+
+        // This is to start the animation when the activity is opened
+        LaunchedEffect(Unit) {
+            dataUsageRemember = dataUsage.toFloat()
+        }
+
+        Box(
+            modifier = Modifier
+                .size(size),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Canvas(
+                modifier = Modifier
+                    .size(size)
+            ) {
+
+                // For shadow
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(shadowColor, Color(0xFFD59898)),
+                        center = Offset(x = this.size.width / 2, y = this.size.height / 2),
+                        radius = this.size.height / 2
+                    ),
+                    radius = this.size.height / 2,
+                    center = Offset(x = this.size.width / 2, y = this.size.height / 2)
+                )
+
+                // This is the white circle that appears on the top of the shadow circle
+                drawCircle(
+                    color = Color.Black,
+                    radius = (size / 2 - indicatorThickness).toPx(),
+                    center = Offset(x = this.size.width / 2, y = this.size.height / 2)
+                )
+
+                // Convert the dataUsage to angle
+                val sweepAngle = (dataUsageAnimate.value) * 360 / 100
+
+                // Foreground indicator
+                drawArc(
+                    color = foregroundIndicatorColor,
+                    startAngle = -90f,
+                    sweepAngle = sweepAngle,
+                    useCenter = false,
+                    style = Stroke(width = indicatorThickness.toPx(), cap = StrokeCap.Round),
+                    size = Size(
+                        width = (size - indicatorThickness).toPx(),
+                        height = (size - indicatorThickness).toPx()
+                    ),
+                    topLeft = Offset(
+                        x = (indicatorThickness / 2).toPx(),
+                        y = (indicatorThickness / 2).toPx()
+                    )
+                )
+            }
+
+            // Display the average vote value
+            DisplayAverageVotingText(
+                animateNumber = dataUsageAnimate,
+                dataTextStyle = dataTextStyle
+            )
+        }
+
+    }
+
+    @Composable
+    private fun DisplayAverageVotingText(
+        animateNumber: State<Float>,
+        dataTextStyle: TextStyle
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            // Text that shows the number inside the circle
+            Text(
+                text = (animateNumber.value).toInt().toString() + "%",
+                style = dataTextStyle
+            )
+        }
+    }
 }
 
-//val kanitFontFamily = FontFamily(
-//    Font(R.font.kanitregular, FontWeight.Normal),
-//    Font(R.font.kanitbold, FontWeight.Bold),
-//    Font(R.font.kanititalic, FontWeight.Normal, FontStyle.Italic)
-//)
+val kanitFontFamily = FontFamily(
+    Font(R.font.kanitregular, FontWeight.Normal),
+    Font(R.font.kanitbold, FontWeight.Bold),
+    Font(R.font.kanititalic, FontWeight.Normal, FontStyle.Italic)
+)
 

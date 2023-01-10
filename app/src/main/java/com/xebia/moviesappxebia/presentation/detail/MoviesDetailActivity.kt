@@ -28,10 +28,14 @@ import androidx.compose.ui.unit.sp
 import com.skydoves.landscapist.glide.GlideImage
 import com.xebia.moviesappxebia.data.moviesService
 import com.xebia.moviesappxebia.data.movies.MoviesRepository
-import com.xebia.moviesappxebia.domain.MostPopularUseCase
+import com.xebia.moviesappxebia.domain.MoviesUseCase
+import com.xebia.moviesappxebia.presentation.home.kanitFontFamily
 import com.xebia.moviesappxebia.utils.Network
 
-
+/**
+ *  MoviesDetailActivity is for displaying movies details
+ *
+ */
 class MoviesDetailActivity : ComponentActivity() {
 
     private lateinit var viewModel: MovieDetailViewModel
@@ -41,10 +45,9 @@ class MoviesDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         movieId = intent.getIntExtra("KEY_MOVIE_ID", 0)
-        Log.d("movieId  ", "" + movieId)
 
         viewModel = MovieDetailViewModel(
-            MostPopularUseCase(
+            MoviesUseCase(
                 MoviesRepository(
                     moviesService
                 )
@@ -52,43 +55,46 @@ class MoviesDetailActivity : ComponentActivity() {
         )
 
         setContent {
-            Column() {
-                Container()
-            }
+            MovieDetailContainer()
         }
     }
 
     @Composable
-    fun Container() {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth().fillMaxHeight()
-                .background(Color(0xFF000000)),
-            horizontalAlignment = Alignment.CenterHorizontally
+    fun MovieDetailContainer() {
+        Surface(
+            modifier = Modifier,
+            color = Color.Black.copy(alpha = 0.8f) // This is what you're missing
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                IconButton(onClick = { onBackPressed() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_menu_close_clear_cancel),
-                        contentDescription = "Close button",
-                        tint = Color.White
-                    )
+                    IconButton(onClick = { onBackPressed() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_menu_close_clear_cancel),
+                            contentDescription = "Close button",
+                            tint = Color.White
+                        )
+                    }
                 }
+                MovieDetail()
             }
-            MovieDetail()
         }
     }
 
     @Composable
     fun MovieDetail() {
-        if (Network.checkConnectivity(this)){
+        if (Network.checkConnectivity(this)) {
             viewModel.getMovieDetailsById(movieId = movieId)
-        }else{
+        } else {
             Toast.makeText(this, "No Internet connection", Toast.LENGTH_SHORT).show()
         }
         val movieDetail by viewModel.movieDetailState.collectAsState()
@@ -97,14 +103,15 @@ class MoviesDetailActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
-                .background(Color(0xFF000000)),
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             GlideImage(
                 imageModel = movieDetail.strImage,
                 modifier = Modifier
-                    .width(150.dp).height(220.dp).padding(top = 20.dp, bottom = 20.dp),
+                    .width(150.dp)
+                    .height(220.dp)
+                    .padding(top = 20.dp, bottom = 20.dp),
                 contentScale = ContentScale.FillBounds,
                 contentDescription = "Movie image"
             )
@@ -116,8 +123,8 @@ class MoviesDetailActivity : ComponentActivity() {
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                fontSize = 20.sp
-//                fontFamily = kanitFontFamily, fontSize = 22.sp
+                fontSize = 20.sp,
+                fontFamily = kanitFontFamily
             )
 
             Text(
@@ -128,8 +135,8 @@ class MoviesDetailActivity : ComponentActivity() {
                 fontWeight = FontWeight.Normal,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                fontSize = 16.sp
-//                fontFamily = kanitFontFamily, fontSize = 18.sp
+                fontSize = 16.sp,
+                fontFamily = kanitFontFamily
             )
 
 
@@ -140,8 +147,8 @@ class MoviesDetailActivity : ComponentActivity() {
                     .padding(top = 8.dp, start = 16.dp, bottom = 10.dp),
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                fontSize = 20.sp
-//                fontFamily = kanitFontFamily, fontSize = 22.sp
+                fontSize = 20.sp,
+                fontFamily = kanitFontFamily
             )
 
             Text(
@@ -151,8 +158,8 @@ class MoviesDetailActivity : ComponentActivity() {
                     .padding(top = 8.dp, start = 16.dp, bottom = 16.dp),
                 fontWeight = FontWeight.Normal,
                 color = Color.White,
-                fontSize = 16.sp
-//                fontFamily = kanitFontFamily, fontSize = 22.sp
+                fontSize = 16.sp,
+                fontFamily = kanitFontFamily
             )
 
             val genre = movieDetail.strGenreTitle
@@ -176,10 +183,8 @@ class MoviesDetailActivity : ComponentActivity() {
                     .background(color = Color.White, shape = RectangleShape)
                     .padding(6.dp),
                 fontWeight = FontWeight.Normal,
-//                    fontFamily = kanitFontFamily, fontSize = 14.sp,
+                fontFamily = kanitFontFamily
             )
         }
     }
-
-
 }

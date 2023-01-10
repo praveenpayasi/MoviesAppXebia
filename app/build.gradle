@@ -65,7 +65,7 @@ dependencies {
 
     implementation "com.github.skydoves:landscapist-glide:1.5.3"
     //Coroutine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -81,4 +81,6 @@ dependencies {
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltAndroidCompiler"
 
     testImplementation("io.mockk:mockk:1.12.7")
+    androidTestImplementation("io.mockk:mockk:1.12.7")
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
 }

@@ -6,7 +6,11 @@ import com.xebia.moviesappxebia.domain.model.NowPlaying
 import com.xebia.moviesappxebia.domain.model.PopularMovie
 import kotlinx.coroutines.flow.map
 
-class MostPopularUseCase(private val repository: MoviesRepository) {
+/**
+ *  this class is used for getting data from repository layer
+ *  and converting it into data model according to our need.
+ */
+class MoviesUseCase(private val repository: MoviesRepository) {
 
     suspend fun fetchMostPopularMovies() =
         repository.fetchPopularMovies().map { movies ->
@@ -15,7 +19,7 @@ class MostPopularUseCase(private val repository: MoviesRepository) {
                     idMovie = moviex.id,
                     strTitle = moviex.original_title,
                     strDate = moviex.release_date,
-                    strVote = moviex.vote_average,
+                    strVote = moviex.vote_average*10,
                     strImageUrl = "${MoviesRepository.IMAGE_PATH}${moviex.poster_path}"
                 )
             }
