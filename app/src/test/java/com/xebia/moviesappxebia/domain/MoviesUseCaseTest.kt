@@ -76,14 +76,14 @@ class MoviesUseCaseTest {
             idMovie = 1,
             strTitle = "Movie 1",
             strDate = "9-1-2023",
-            strVote = 77.0,
+            strVote = 770.0,
             strImageUrl = "${IMAGE_PATH}image url 1"
         ),
         DomainPopularMovie(
             idMovie = 2,
             strTitle = "Movie 2",
             strDate = "9-1-2023",
-            strVote = 77.0,
+            strVote = 770.0,
             strImageUrl = "${IMAGE_PATH}image url 2"
         ),
     )
