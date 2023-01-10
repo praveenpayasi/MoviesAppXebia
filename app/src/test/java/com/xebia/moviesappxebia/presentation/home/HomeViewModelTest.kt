@@ -17,6 +17,10 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/**
+ *  this class is having unit test cases for home view model
+ *
+ */
 @DelicateCoroutinesApi
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {

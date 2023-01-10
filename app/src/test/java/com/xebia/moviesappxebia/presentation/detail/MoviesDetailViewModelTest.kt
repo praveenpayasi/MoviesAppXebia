@@ -16,6 +16,11 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+/**
+ *  this class is having unit test cases for movie detail view model
+ *
+ */
+
 @DelicateCoroutinesApi
 @ExperimentalCoroutinesApi
 class MoviesDetailViewModelTest {

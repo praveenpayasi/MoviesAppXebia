@@ -10,6 +10,10 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+/**
+ *  this class have the repository layer unit test cases
+ *
+ */
 class MoviesRepositoryTest {
 
     @MockK
@@ -25,10 +29,10 @@ class MoviesRepositoryTest {
     private lateinit var moviesDetailResponse: MoviesDetailResponse
 
     @MockK
-    private lateinit var popularMoviesList : List<Result>
+    private lateinit var popularMoviesList: List<Result>
 
     @MockK
-    private lateinit var nowPlayingMoviesList : List<ResultX>
+    private lateinit var nowPlayingMoviesList: List<ResultX>
 
 
     @Before
@@ -37,40 +41,40 @@ class MoviesRepositoryTest {
     }
 
     @Test
-    fun fetchPopularMovies(){
+    fun fetchPopularMovies() {
         coEvery { service.fetchPopularMovies() } returns popularMoviesResponse
-        coEvery { popularMoviesResponse.results }  returns popularMoviesList
+        coEvery { popularMoviesResponse.results } returns popularMoviesList
 
-        val moviesRepository  =  MoviesRepository(service)
+        val moviesRepository = MoviesRepository(service)
         runBlocking {
             val actualResponse = moviesRepository.fetchPopularMovies().first()
             val expectedResponse = popularMoviesList
-            Assert.assertEquals(expectedResponse,actualResponse)
+            Assert.assertEquals(expectedResponse, actualResponse)
         }
     }
 
     @Test
-    fun fetchNowPlayingMovies(){
+    fun fetchNowPlayingMovies() {
         coEvery { service.fetchNowPlayingMovies() } returns nowPlayingResponse
-        coEvery { nowPlayingResponse.results }  returns nowPlayingMoviesList
+        coEvery { nowPlayingResponse.results } returns nowPlayingMoviesList
 
-        val moviesRepository  =  MoviesRepository(service)
+        val moviesRepository = MoviesRepository(service)
         runBlocking {
             val actualResponse = moviesRepository.fetchNowPlayingMovies().first()
             val expectedResponse = nowPlayingMoviesList
-            Assert.assertEquals(expectedResponse,actualResponse)
+            Assert.assertEquals(expectedResponse, actualResponse)
         }
     }
 
     @Test
-    fun fetchMoviesById(){
+    fun fetchMoviesById() {
         coEvery { service.fetchMovieDetailsById(76600) } returns moviesDetailResponse
 
-        val moviesRepository  =  MoviesRepository(service)
+        val moviesRepository = MoviesRepository(service)
         runBlocking {
             val actualResponse = moviesRepository.fetchMoviesById(76600).first()
             val expectedResponse = moviesDetailResponse
-            Assert.assertEquals(expectedResponse,actualResponse)
+            Assert.assertEquals(expectedResponse, actualResponse)
         }
     }
 }
