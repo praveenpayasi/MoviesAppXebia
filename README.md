@@ -16,6 +16,17 @@ Repository separates the concern and provide clear way of handling data. With li
 | ![List](media/Screenshot_home_screen.png) | ![Detail](media/Screenshot_detail_screen.png) |
 
 
+## Testing approach
+It is very important how user is going to interact with your application. Writing test cases gives assurance that application is stable and safe for your user.
+It allows you to refactor code easily.
+It captures business requirements in form of test cases.
+
+| Unit Test |
+| ----------- |
+| ![Unit test](media/Screenshot_unit_test.png) |
+
+
+- **Run unit test:** `./gradlew :app:test`
 
 
 ## Libraries used
